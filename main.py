@@ -22,6 +22,32 @@ def get_password():
     password.delete(0, tkinter.END)
     password.insert(0, pass_string)
 
+# ---------------------------- PASSWORD FINDER ------------------------------- #
+def search_password():
+    page_name = website.get()
+
+    if len(page_name) > 0:
+        try:
+            with open("data.txt") as file:
+                data_list = file.readlines()
+        except FileNotFoundError:
+            messagebox.showinfo(title=page_name, message="No passwords stored for this website")
+        else:
+            result = []
+            for data in data_list:
+                if data.find(f"{page_name} ") != -1:
+                    result = data.split('|')
+
+            if len(result) == 0:
+                messagebox.showinfo(title=page_name, message="No passwords stored for this website")
+            elif len(result) == 3:
+                pyperclip.copy(result[2])
+                messagebox.showinfo(title=page_name, message=f"Email: {result[1]} \nPassword: {result[2]}")
+            else:
+                messagebox.showerror(title="Corrupted Data", message=f"Data for this website is corrupted.")
+    else:
+        messagebox.showinfo(title="No Website Specified", message="Please provide a website to search for.")
+
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def add_password():
     if len(website.get()) > 0 and len(user_name.get()) > 0 and len(password.get()) > 0:
@@ -52,18 +78,6 @@ logo = tkinter.PhotoImage(file = "logo.png")
 canvas.create_image(100, 100, image=logo)
 canvas.grid(column=1, row=0)
 
-#Inputs
-website = tkinter.Entry(width=53)
-website.grid(column=1, row=1, columnspan=2)
-website.focus()
-
-user_name = tkinter.Entry(width=53)
-user_name.grid(column=1, row=2, columnspan=2)
-user_name.insert(0, MY_EMAIL)
-
-password = tkinter.Entry(width=33)
-password.grid(column=1, row=3)
-
 #Labels
 website_label = tkinter.Label(text="Website:")
 website_label.grid(column=0, row=1)
@@ -74,7 +88,22 @@ user_name_label.grid(column=0, row=2)
 password_label = tkinter.Label(text="Password:")
 password_label.grid(column=0, row=3)
 
+#Inputs
+website = tkinter.Entry(width=33)
+website.grid(column=1, row=1)
+website.focus()
+
+user_name = tkinter.Entry(width=53)
+user_name.grid(column=1, row=2, columnspan=2)
+user_name.insert(0, MY_EMAIL)
+
+password = tkinter.Entry(width=33)
+password.grid(column=1, row=3)
+
 #Buttons
+search_button = tkinter.Button(text="Search", command=search_password, width=15)
+search_button.grid(column=2, row=1)
+
 add_button = tkinter.Button(text="Add", command=add_password, width=30)
 add_button.grid(column=1, row=4, columnspan=2)
 
