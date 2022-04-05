@@ -2,6 +2,7 @@ import tkinter
 import random
 from tkinter import messagebox
 import pyperclip
+import json
 
 MY_EMAIL = "myemail@gmail.com"  #change to user's default email
 LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -28,45 +29,48 @@ def search_password():
 
     if len(page_name) > 0:
         try:
-            with open("data.txt") as file:
-                data_list = file.readlines()
+            with open("data.json") as data_file:
+                data_dict = json.load(data_file)
+                result = data_dict[page_name]
         except FileNotFoundError:
             messagebox.showinfo(title=page_name, message="No passwords stored for this website")
+        except KeyError:
+            messagebox.showinfo(title=page_name, message="No passwords stored for this website")
         else:
-            result = []
-            for data in data_list:
-                if data.find(f"{page_name} ") != -1:
-                    result = data.split('|')
-
-            if len(result) == 0:
-                messagebox.showinfo(title=page_name, message="No passwords stored for this website")
-            elif len(result) == 3:
-                pyperclip.copy(result[2])
-                messagebox.showinfo(title=page_name, message=f"Email: {result[1]} \nPassword: {result[2]}")
-            else:
-                messagebox.showerror(title="Corrupted Data", message=f"Data for this website is corrupted.")
+            messagebox.showinfo(title=page_name, message=f"Email: {result['email']} \nPassword: {result['password']}")
     else:
         messagebox.showinfo(title="No Website Specified", message="Please provide a website to search for.")
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def add_password():
-    if len(website.get()) > 0 and len(user_name.get()) > 0 and len(password.get()) > 0:
-        yes = messagebox.askokcancel(title=website.get(), message=f"These are the details entered: \nEmail: {user_name.get()} "
-                                                           f"\nPassword: {password.get()} \nIs it ok to save?")
+    page_name = website.get()
+
+    new_data = {
+        page_name: {
+        "email":user_name.get(),
+        "password":password.get()
+        }
+    }
+
+    if len(page_name) > 0 and len(new_data[page_name]["email"]) > 0 and len(new_data[page_name]["password"]) > 0:
+        yes = messagebox.askokcancel(title=page_name, message=f"These are the details entered: \nEmail: {new_data[page_name]['email']} "
+                                                           f"\nPassword: {new_data[page_name]['password']} \nIs it ok to save?")
+        if yes:
+            try:
+                with open("data.json") as data_file:
+                    data = json.load(data_file)
+            except FileNotFoundError:
+                data = new_data
+            else:
+                data.update(new_data)
+            finally:
+                with open("data.json", 'w') as data_file:
+                    json.dump(data, data_file, indent=4)
+
+                    website.delete(0, tkinter.END)
+                    password.delete(0, tkinter.END)
     else:
         messagebox.showinfo(title="Oops", message="Please don't leave any fields empty!")
-
-    if yes:
-        try:
-            with open("data.txt", mode='a') as file:
-                file.write(f"{website.get()} | {user_name.get()} | {password.get()}\n")
-                website.delete(0, tkinter.END)
-                password.delete(0, tkinter.END)
-        except FileNotFoundError:
-            with open("data.txt", mode='w') as file:
-                file.write(f"{website.get()} | {user_name.get()} | {password.get()}\n")
-                website.delete(0, tkinter.END)
-                password.delete(0, tkinter.END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = tkinter.Tk()
