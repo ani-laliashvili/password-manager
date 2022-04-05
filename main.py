@@ -31,13 +31,15 @@ def find_password():
         try:
             with open("data.json") as data_file:
                 data_dict = json.load(data_file)
-                result = data_dict[page_name]
+
         except FileNotFoundError:
             messagebox.showinfo(title=page_name, message="No passwords stored for this website")
-        except KeyError:
-            messagebox.showinfo(title=page_name, message="No passwords stored for this website")
         else:
-            messagebox.showinfo(title=page_name, message=f"Email: {result['email']} \nPassword: {result['password']}")
+            if page_name in data_dict:
+                result = data_dict[page_name]
+                messagebox.showinfo(title=page_name, message=f"Email: {result['email']} \nPassword: {result['password']}")
+            else:
+                messagebox.showinfo(title=page_name, message="No passwords stored for this website")
     else:
         messagebox.showinfo(title="No Website Specified", message="Please provide a website to search for.")
 
