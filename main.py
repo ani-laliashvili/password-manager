@@ -49,15 +49,15 @@ canvas.create_image(100, 100, image=logo)
 canvas.grid(column=1, row=0)
 
 #Inputs
-website = tkinter.Entry(width=35)
+website = tkinter.Entry(width=53)
 website.grid(column=1, row=1, columnspan=2)
 website.focus()
 
-user_name = tkinter.Entry(width=35)
+user_name = tkinter.Entry(width=53)
 user_name.grid(column=1, row=2, columnspan=2)
 user_name.insert(0, MY_EMAIL)
 
-password = tkinter.Entry(width=16)
+password = tkinter.Entry(width=33)
 password.grid(column=1, row=3)
 
 #Labels
@@ -74,7 +74,7 @@ password_label.grid(column=0, row=3)
 add_button = tkinter.Button(text="Add", command=add_password, width=30)
 add_button.grid(column=1, row=4, columnspan=2)
 
-get_button = tkinter.Button(text="Generate Password", command=get_password, width=15, padx=0)
+get_button = tkinter.Button(text="Generate Password", command=get_password, width=15)
 get_button.grid(column=2, row=3)
 
 window.mainloop()
