@@ -11,7 +11,7 @@ CHARS = ['!', '@', '#', '%', '/', '*', '&', '^', '+', ')', '(']
 NUMS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
-def get_password():
+def generate_password():
     pass_list = [random.choice(LETTERS) for _ in range(random.randint(8, 12))]
     pass_list += [random.choice(CHARS) for _ in range(random.randint(2, 4))]
     pass_list += [random.choice(NUMS) for _ in range(random.randint(2, 4))]
@@ -24,7 +24,7 @@ def get_password():
     password.insert(0, pass_string)
 
 # ---------------------------- PASSWORD FINDER ------------------------------- #
-def search_password():
+def find_password():
     page_name = website.get()
 
     if len(page_name) > 0:
@@ -105,13 +105,13 @@ password = tkinter.Entry(width=33)
 password.grid(column=1, row=3)
 
 #Buttons
-search_button = tkinter.Button(text="Search", command=search_password, width=15)
+search_button = tkinter.Button(text="Search", command=find_password, width=15)
 search_button.grid(column=2, row=1)
 
 add_button = tkinter.Button(text="Add", command=add_password, width=30)
 add_button.grid(column=1, row=4, columnspan=2)
 
-get_button = tkinter.Button(text="Generate Password", command=get_password, width=15)
+get_button = tkinter.Button(text="Generate Password", command=generate_password, width=15)
 get_button.grid(column=2, row=3)
 
 window.mainloop()
