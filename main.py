@@ -24,8 +24,6 @@ def get_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def add_password():
-    yes = False
-
     if len(website.get()) > 0 and len(user_name.get()) > 0 and len(password.get()) > 0:
         yes = messagebox.askokcancel(title=website.get(), message=f"These are the details entered: \nEmail: {user_name.get()} "
                                                            f"\nPassword: {password.get()} \nIs it ok to save?")
