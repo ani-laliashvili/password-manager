@@ -33,10 +33,16 @@ def add_password():
         messagebox.showinfo(title="Oops", message="Please don't leave any fields empty!")
 
     if yes:
-        with open("data.txt", mode='a') as file:
-            file.write(f"{website.get()} | {user_name.get()} | {password.get()}\n")
-            website.delete(0, tkinter.END)
-            password.delete(0, tkinter.END)
+        try:
+            with open("passwords.txt", mode='a') as file:
+                file.write(f"{website.get()} | {user_name.get()} | {password.get()}\n")
+                website.delete(0, tkinter.END)
+                password.delete(0, tkinter.END)
+        except(FileNotFoundError):
+            with open("passwords.txt", mode='w') as file:
+                file.write(f"{website.get()} | {user_name.get()} | {password.get()}\n")
+                website.delete(0, tkinter.END)
+                password.delete(0, tkinter.END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = tkinter.Tk()
